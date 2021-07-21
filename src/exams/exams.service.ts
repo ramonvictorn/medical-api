@@ -35,7 +35,7 @@ export class ExamsService {
       const exam = this.examRepository.create(examDto);
       await this.examRepository.save(exam);
 
-      if (examDto.laboratories.length <= 0) {
+      if (!examDto.laboratories || examDto.laboratories.length <= 0) {
         return this.getExamsWithLaboratoriesInfo({
           examId: exam.id,
         });
@@ -94,10 +94,16 @@ export class ExamsService {
     return this.getExamsWithLaboratoriesInfo(query);
   }
 
-  findOne(id: string) {
-    return this.getExamsWithLaboratoriesInfo({
+  async findOne(id: string) {
+    const examFound = await this.getExamsWithLaboratoriesInfo({
       examId: id,
     });
+
+    if (!examFound) {
+      throw new EntityNotFoundError(Exam, id);
+    }
+
+    return examFound;
   }
 
   async update(id: string, updateExamDto: UpdateExamDto) {
@@ -182,6 +188,11 @@ export class ExamsService {
   }
 
   async remove(id: string) {
+    const existentExan = await this.examRepository.findOne(id);
+    if (!existentExan) {
+      throw new EntityNotFoundError(Exam, id);
+    }
+
     const deleteResult = await this.examRepository.softDelete(id);
 
     if (!deleteResult.affected) {
@@ -190,17 +201,25 @@ export class ExamsService {
   }
 
   async removeMultiples(removeMultiplesExamsDto: RemoveMultiplesExamsDto) {
-    return Promise.all(
-      removeMultiplesExamsDto.exams.map((examInfo) => {
+    const message = [];
+
+    await Promise.all(
+      removeMultiplesExamsDto.exams.map(async (examInfo) => {
         try {
-          this.remove(examInfo.id);
+          await this.remove(examInfo.id);
           return;
         } catch (error) {
           console.log(error);
-          return;
+          message.push(error);
         }
       }),
     );
+
+    if (message.length) {
+      return {
+        message,
+      };
+    }
   }
 
   async toggleExamOnLaboratory(examId: string, laboratoryId: string) {

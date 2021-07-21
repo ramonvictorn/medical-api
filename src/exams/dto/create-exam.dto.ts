@@ -27,10 +27,9 @@ export class CreateExamDto {
 
   @Type(() => LaboratoryItemDto)
   @ValidateNested({ each: true })
-  @ArrayMinSize(1)
   @IsArray()
-  @IsNotEmpty()
-  laboratories: LaboratoryItemDto[];
+  @IsOptional()
+  laboratories?: LaboratoryItemDto[];
 }
 
 export class LaboratoryItemDto {

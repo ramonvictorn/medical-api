@@ -54,7 +54,6 @@ export class ExamsController {
   }
 
   @Delete('/multiples')
-  @HttpCode(204)
   removeMultiples(@Body() removeMultiplesExamsDto: RemoveMultiplesExamsDto) {
     return this.examsService.removeMultiples(removeMultiplesExamsDto);
   }
