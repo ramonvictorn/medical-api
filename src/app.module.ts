@@ -20,8 +20,7 @@ import { Laboratory } from './laboratories/entities/laboratory.entity';
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
       entities: [Exam, Laboratory, LaboratoriesExams],
-      synchronize: true,
-      logging: true,
+      synchronize: true, // JUST FOR DEVELOPMENT...
       socketPath: process.env.TYPEORM_SOCKET_PATH,
     }),
     LaboratoriesModule,

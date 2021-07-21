@@ -38,6 +38,7 @@ $ npm install
 ```
 
 ## Running the app
+If will not be executed with docker,  create your `.env` file based on `.env.example` file before run.  
 
 ```bash
 # watch mode
@@ -61,6 +62,12 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## Running on Docker
+The following command will create and run the **api** and one **database on containers**: 
+```bash
+ docker-compose up
 ```
 
 ## Basic Architecture concepts
