@@ -11,7 +11,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ExamsService } from './exams.service';
-import { CreateExamDto } from './dto/create-exam.dto';
+import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
 
@@ -24,14 +24,19 @@ export class ExamsController {
     return this.examsService.create(createExamDto);
   }
 
+  @Post('/multiples')
+  createMultiple(@Body() createMultipleExamDto: CreateMultipleExamDto) {
+    return this.examsService.createMultiple(createMultipleExamDto);
+  }
+
   @Get()
   findAll(@Query() query: SearchExamDto) {
     return this.examsService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.examsService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.examsService.findOne(id);
   }
 
   @Patch(':id')

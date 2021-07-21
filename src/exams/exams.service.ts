@@ -4,8 +4,8 @@ import {
   Laboratory,
   LaboratoryStatus,
 } from 'src/laboratories/entities/laboratory.entity';
-import { EntityNotFoundError, In, Repository } from 'typeorm';
-import { CreateExamDto } from './dto/create-exam.dto';
+import { EntityNotFoundError, Repository } from 'typeorm';
+import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { Exam, ExamStatus } from './entities/exam.entity';
@@ -22,62 +22,81 @@ export class ExamsService {
     private laboratoriesExamsRepository: Repository<LaboratoriesExams>,
   ) {}
 
-  async create(createExamDto: CreateExamDto) {
-    const exam = this.examRepository.create(createExamDto);
-    await this.examRepository.save(exam);
+  private async createExams(createExamDto: CreateExamDto | CreateExamDto[]) {
+    const examsToCreat: CreateExamDto[] = Array.isArray(createExamDto)
+      ? createExamDto
+      : [createExamDto];
 
-    if (
-      !createExamDto.laboratories ||
-      createExamDto.laboratories.length === 0
-    ) {
-      return;
-    }
-
-    const laboratoriesIds = createExamDto.laboratories.map(
-      (lab) => lab.laboratory_id,
-    );
-
+    const laboratoriesInfo = {};
     const message = [];
-    const laboratories = await this.laboratoryRepository.find({
-      where: {
-        id: In(laboratoriesIds),
-      },
-    });
 
-    const creationPromise = createExamDto.laboratories.map(
-      async (laboratorie) => {
-        const laboratoryId = laboratorie.laboratory_id;
-        const laboratoryInfo = laboratories.find(
-          (lab) => lab.id === laboratoryId,
-        );
+    const examsPromised = examsToCreat.map(async (examDto) => {
+      const exam = this.examRepository.create(examDto);
+      await this.examRepository.save(exam);
 
-        if (
-          laboratoryInfo &&
-          laboratoryInfo.status === LaboratoryStatus.Active
-        ) {
-          await this.addExamToLaboratory(laboratoryId, exam.id);
+      if (examDto.laboratories.length <= 0) {
+        return this.getExamsWithLaboratoriesInfo({
+          examId: exam.id,
+        });
+      }
+      const connectExamsPromised = examDto.laboratories.map(async (lab) => {
+        const labId = lab.laboratory_id;
+        let labInfo = laboratoriesInfo[labId];
+
+        if (!labInfo || !labInfo.id) {
+          laboratoriesInfo[labId] = await this.laboratoryRepository.findOne({
+            where: {
+              id: labId,
+            },
+          });
+          labInfo = laboratoriesInfo[labId];
+        }
+
+        if (labInfo && labInfo.status === LaboratoryStatus.Active) {
+          await this.addExamToLaboratory(labId, exam.id);
         } else {
           message.push(
-            `Laboratory ${laboratoryId} cannot be used, check the laboratory status`,
+            `Laboratory ${labId} cannot be used, check the laboratory status`,
           );
         }
-      },
-    );
+      });
 
-    await Promise.all(creationPromise);
+      await Promise.all(connectExamsPromised);
+      return this.getExamsWithLaboratoriesInfo({
+        examId: exam.id,
+      });
+    });
+
+    const examsResults = await Promise.all(examsPromised);
+
     if (message.length) {
       return {
         message,
+        exams: examsResults,
       };
     }
+
+    return {
+      exams: examsResults,
+    };
+  }
+
+  async create(createExamDto: CreateExamDto) {
+    return this.createExams(createExamDto);
+  }
+
+  async createMultiple(createMultipleExamDto: CreateMultipleExamDto) {
+    return this.createExams(createMultipleExamDto.exams);
   }
 
   async findAll(query: SearchExamDto) {
     return this.getExamsWithLaboratoriesInfo(query);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} exam`;
+  findOne(id: string) {
+    return this.getExamsWithLaboratoriesInfo({
+      examId: id,
+    });
   }
 
   async update(id: string, updateExamDto: UpdateExamDto) {
@@ -181,6 +200,10 @@ export class ExamsService {
       query.where('exams.status = :examStatus', { examStatus: filters.status });
     }
 
+    if (filters.examId) {
+      query.where('exams.id = :examId', { examId: filters.examId });
+    }
+
     if (filters.q) {
       query.andWhere('exams.name ilike :queryParam', {
         queryParam: `%${filters.q}%`,
@@ -188,6 +211,9 @@ export class ExamsService {
     }
 
     const exams = await query.getRawMany();
+    if (filters.examId) {
+      return exams.length ? exams[0] : null;
+    }
     return exams;
   }
 

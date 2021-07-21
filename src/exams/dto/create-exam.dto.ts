@@ -9,8 +9,6 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { Laboratory } from 'src/laboratories/entities/laboratory.entity';
-import { Exists } from 'src/validators/exists.rule';
 import { ExamStatus, ExamType } from '../entities/exam.entity';
 
 export class CreateExamDto {
@@ -36,9 +34,17 @@ export class CreateExamDto {
 }
 
 class LaboratoryItemDto {
-  @Exists(Laboratory)
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
   laboratory_id: string;
+}
+
+export class CreateMultipleExamDto {
+  @Type(() => CreateExamDto)
+  @ValidateNested({ each: true })
+  @ArrayMinSize(1)
+  @IsArray()
+  @IsNotEmpty()
+  exams: CreateExamDto[];
 }
