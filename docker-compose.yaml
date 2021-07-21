@@ -1,0 +1,25 @@
+version: '3'
+
+services: 
+    medical-api:
+        build: .
+        entrypoint: .docker/entrypoint.sh
+        container_name: medical-api
+        ports: 
+            - 3000:3000
+        volumes: 
+            - .:/home/node/app
+        depends_on: 
+            - medical-db
+    medical-db:
+        container_name: medical-db
+        build: .docker/postgres
+        restart: always
+        tty: true
+        ports: 
+            - 5569:5432
+        volumes: 
+            - ./.docker/dbdata:/var/lib/postgresql/data
+        environment: 
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=medical
