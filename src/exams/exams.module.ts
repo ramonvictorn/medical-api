@@ -3,7 +3,7 @@ import { ExamsService } from './exams.service';
 import { ExamsController } from './exams.controller';
 import { Exam } from './entities/exam.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Laboratory } from 'src/laboratories/entities/laboratory.entity';
+import { Laboratory } from '../laboratories/entities/laboratory.entity';
 import { LaboratoriesExams } from './entities/laboratories_exams.entity';
 
 @Module({

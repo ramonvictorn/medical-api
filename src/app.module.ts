@@ -5,6 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LaboratoriesModule } from './laboratories/laboratories.module';
 import { ExamsModule } from './exams/exams.module';
+import { Exam } from './exams/entities/exam.entity';
+import { LaboratoriesExams } from './exams/entities/laboratories_exams.entity';
+import { Laboratory } from './laboratories/entities/laboratory.entity';
 
 @Module({
   imports: [
@@ -16,7 +19,7 @@ import { ExamsModule } from './exams/exams.module';
       username: process.env.TYPEORM_USERNAME,
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
-      entities: [process.env.TYPEORM_ENTITIES],
+      entities: [Exam, Laboratory, LaboratoriesExams],
       synchronize: true,
       logging: true,
     }),

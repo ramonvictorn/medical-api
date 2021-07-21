@@ -1,4 +1,4 @@
-import { Laboratory } from 'src/laboratories/entities/laboratory.entity';
+import { Laboratory } from '../../laboratories/entities/laboratory.entity';
 import {
   Column,
   CreateDateColumn,

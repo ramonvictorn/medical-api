@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Laboratory,
   LaboratoryStatus,
-} from 'src/laboratories/entities/laboratory.entity';
+} from '../laboratories/entities/laboratory.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
 import { RemoveMultiplesExamsDto } from './dto/delete-multples-exams.dto';
