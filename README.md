@@ -61,7 +61,7 @@ $ npm run test:cov
 
 ## Basic Architecture concepts
 ### Request flow:
-<img src="https://github.com/ramonvictorn/medical-api/arch.svg" alt="NPM Version" />
+<img src="https://github.com/ramonvictorn/medical-api/blob/main/arch.svg" alt="NPM Version" />
 
 ## License
 
