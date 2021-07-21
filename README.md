@@ -24,8 +24,7 @@
 
 ## Description
 
-This project uses the [Nestjs Framework](https://github.com/nestjs/nest), see documentation for more details
- framework TypeScript starter repository.
+This project uses the [Nestjs Framework](https://github.com/nestjs/nest), see documentation for more details.  
 
 
 ## Api docs
@@ -51,6 +50,14 @@ $ npm run start:prod
 $ npm run start
 ```
 
+## Running on Docker
+The following command will create and run the **api** and one **database on containers**: 
+```bash
+ docker-compose up
+```
+
+Port 3000 is the default port.
+
 ## Test
 
 ```bash
@@ -62,12 +69,6 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
-```
-
-## Running on Docker
-The following command will create and run the **api** and one **database on containers**: 
-```bash
- docker-compose up
 ```
 
 ## Basic Architecture concepts
