@@ -8,11 +8,16 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { CreateExamDto } from './create-exam.dto';
+import { CreateExamDto, LaboratoryItemDto } from './create-exam.dto';
 
-export class UpdateExamDto extends PartialType(CreateExamDto) {}
+export class UpdateExamDto extends PartialType(CreateExamDto) {
+  @Type(() => LaboratoryItemDto)
+  @ValidateNested({ each: true })
+  @IsArray()
+  laboratories?: LaboratoryItemDto[];
+}
 
-export class UpdateMultilpleExamSingleDto extends PartialType(CreateExamDto) {
+export class UpdateMultilpleExamSingleDto extends PartialType(UpdateExamDto) {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()

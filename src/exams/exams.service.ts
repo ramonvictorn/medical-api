@@ -4,7 +4,7 @@ import {
   Laboratory,
   LaboratoryStatus,
 } from '../laboratories/entities/laboratory.entity';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { EntityNotFoundError, In, Repository } from 'typeorm';
 import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
 import { RemoveMultiplesExamsDto } from './dto/delete-multples-exams.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
@@ -110,9 +110,64 @@ export class ExamsService {
         HttpStatus.BAD_GATEWAY,
       );
     }
-    const updateResult = await this.examRepository.update(id, updateExamDto);
+    const { laboratories, ...updateExamDetails } = updateExamDto;
+    const updateResult = await this.examRepository.update(
+      id,
+      updateExamDetails,
+    );
+
     if (!updateResult.affected) {
       throw new EntityNotFoundError(Exam, id);
+    }
+
+    if (laboratories) {
+      const currentLaboratories = await this.laboratoriesExamsRepository.find({
+        where: {
+          exam_id: id,
+        },
+        relations: ['laboratory'],
+      });
+
+      const laboratoriesIdToDisconnect = {};
+      currentLaboratories.forEach((lab) => {
+        laboratoriesIdToDisconnect[lab.laboratory_id] = lab;
+      });
+
+      await Promise.all(
+        laboratories.map(async ({ laboratory_id }) => {
+          const existentLab = currentLaboratories.find(
+            (existentLabConnection) => {
+              return existentLabConnection.laboratory_id === laboratory_id;
+            },
+          );
+
+          if (existentLab) {
+            delete laboratoriesIdToDisconnect[laboratory_id];
+          } else {
+            const laboratoryInfo = await this.laboratoryRepository.findOne({
+              where: { id: laboratory_id },
+            });
+
+            if (laboratoryInfo.status === LaboratoryStatus.Active) {
+              const laboratoryExam = this.laboratoriesExamsRepository.create({
+                exam_id: id,
+                laboratory_id,
+              });
+              await this.laboratoriesExamsRepository.save(laboratoryExam);
+            }
+          }
+        }),
+      );
+
+      const labIdsToDelete = Object.keys(laboratoriesIdToDisconnect).map(
+        (labId) => labId,
+      );
+      if (labIdsToDelete.length) {
+        await this.laboratoriesExamsRepository.delete({
+          exam_id: id,
+          laboratory_id: In(labIdsToDelete),
+        });
+      }
     }
     return this.examRepository.findOne(id);
   }

@@ -33,7 +33,7 @@ export class CreateExamDto {
   laboratories: LaboratoryItemDto[];
 }
 
-class LaboratoryItemDto {
+export class LaboratoryItemDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
