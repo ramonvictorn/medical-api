@@ -1,0 +1,16 @@
+service: <service-name>
+runtime: nodejs14
+instance_class: F2
+
+automatic_scaling:
+  min_instances: 0
+
+env_variables:
+  TYPEORM_HOST: <host or sockepath>
+  TYPEORM_PORT: 5432
+  TYPEORM_CONNECTION: postgres
+  TYPEORM_USERNAME: <username>
+  TYPEORM_PASSWORD: <dbpassword>
+  TYPEORM_DATABASE: <dbname>
+  TYPEORM_SOCKET_PATH: <sockepath>
+

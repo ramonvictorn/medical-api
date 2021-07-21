@@ -22,6 +22,7 @@ import { Laboratory } from './laboratories/entities/laboratory.entity';
       entities: [Exam, Laboratory, LaboratoriesExams],
       synchronize: true,
       logging: true,
+      socketPath: process.env.TYPEORM_SOCKET_PATH,
     }),
     LaboratoriesModule,
     ExamsModule,
