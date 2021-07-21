@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ExamsService } from './exams.service';
 import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
-import { UpdateExamDto } from './dto/update-exam.dto';
+import { UpdateExamDto, UpdateMultipleExamsDto } from './dto/update-exam.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
 
 @Controller('exams')
@@ -27,6 +27,11 @@ export class ExamsController {
   @Post('/multiples')
   createMultiple(@Body() createMultipleExamDto: CreateMultipleExamDto) {
     return this.examsService.createMultiple(createMultipleExamDto);
+  }
+
+  @Patch('/multiples')
+  updateMultiples(@Body() updateMultiplesExamsDto: UpdateMultipleExamsDto) {
+    return this.examsService.updateMultiples(updateMultiplesExamsDto);
   }
 
   @Get()

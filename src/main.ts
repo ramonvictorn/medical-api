@@ -9,6 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       errorHttpStatusCode: 422,
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
   await app.listen(3000);

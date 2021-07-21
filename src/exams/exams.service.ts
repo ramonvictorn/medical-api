@@ -7,7 +7,7 @@ import {
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
-import { UpdateExamDto } from './dto/update-exam.dto';
+import { UpdateExamDto, UpdateMultipleExamsDto } from './dto/update-exam.dto';
 import { Exam, ExamStatus } from './entities/exam.entity';
 import { LaboratoriesExams } from './entities/laboratories_exams.entity';
 
@@ -114,6 +114,15 @@ export class ExamsService {
       throw new EntityNotFoundError(Exam, id);
     }
     return this.examRepository.findOne(id);
+  }
+
+  async updateMultiples(updateMultiplesExamsDto: UpdateMultipleExamsDto) {
+    return Promise.all(
+      updateMultiplesExamsDto.exams.map((examInfo) => {
+        const { id, ...dtoDetails } = examInfo;
+        return this.update(id, dtoDetails);
+      }),
+    );
   }
 
   async remove(id: string) {
