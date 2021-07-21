@@ -27,6 +27,10 @@
 This project uses the [Nestjs Framework](https://github.com/nestjs/nest), see documentation for more details
  framework TypeScript starter repository.
 
+
+## Api docs
+Api documentation can be acessed [here](https://documenter.getpostman.com/view/7844669/TzsYLoZH).  
+
 ## Installation
 
 ```bash
@@ -36,14 +40,14 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
 # watch mode
 $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# production execution
+$ npm run start
 ```
 
 ## Test
@@ -61,7 +65,7 @@ $ npm run test:cov
 
 ## Basic Architecture concepts
 ### Request flow:
-<img src="https://github.com/ramonvictorn/medical-api/blob/main/arch.svg" alt="NPM Version" />
+<img src="https://github.com/ramonvictorn/medical-api/blob/main/arch.svg" alt="Request Flow" />
 
 ## License
 
