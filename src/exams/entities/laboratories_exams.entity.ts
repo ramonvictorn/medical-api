@@ -1,6 +1,7 @@
 import { Laboratory } from 'src/laboratories/entities/laboratory.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -16,14 +17,17 @@ export class LaboratoriesExams {
   @Column()
   laboratory_id: string;
 
-  @ManyToOne(() => Laboratory, (laboratory) => laboratory.id)
+  @ManyToOne(() => Laboratory, (laboratory) => laboratory.exams)
   @JoinColumn({ name: 'laboratory_id' })
   laboratory: Laboratory;
 
   @Column()
   exam_id: string;
 
-  @ManyToOne(() => Exam, (exam) => exam.id)
+  @ManyToOne(() => Exam, (exam) => exam.laboratories, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'exam_id' })
   exame: Exam;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt: Date;
 }

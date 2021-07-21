@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { LaboratoriesService } from './laboratories.service';
 import { CreateLaboratoryDto } from './dto/create-laboratory.dto';
@@ -29,13 +30,13 @@ export class LaboratoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.laboratoriesService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateLaboratoryDto: UpdateLaboratoryDto,
   ) {
     return this.laboratoriesService.update(id, updateLaboratoryDto);
@@ -43,7 +44,7 @@ export class LaboratoriesController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.laboratoriesService.remove(id);
   }
 }

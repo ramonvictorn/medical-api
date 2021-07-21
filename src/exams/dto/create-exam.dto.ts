@@ -27,15 +27,15 @@ export class CreateExamDto {
   @IsOptional()
   status: ExamStatus;
 
-  @Type(() => LaboratoryItem)
+  @Type(() => LaboratoryItemDto)
   @ValidateNested({ each: true })
   @ArrayMinSize(1)
   @IsArray()
   @IsNotEmpty()
-  laboratories2: LaboratoryItem[];
+  laboratories: LaboratoryItemDto[];
 }
 
-class LaboratoryItem {
+class LaboratoryItemDto {
   @Exists(Laboratory)
   @IsUUID('4')
   @IsString()

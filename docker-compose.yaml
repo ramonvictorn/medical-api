@@ -23,3 +23,5 @@ services:
         environment: 
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=medical
+            - TZ=America/Sao_Paulo
+            - PGTZ=America/Sao_Paulo

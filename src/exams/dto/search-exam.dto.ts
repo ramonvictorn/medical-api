@@ -6,4 +6,8 @@ export class SearchExamDto {
   @IsString()
   @IsOptional()
   status: ExamStatus;
+
+  @IsString()
+  @IsOptional()
+  q: string;
 }

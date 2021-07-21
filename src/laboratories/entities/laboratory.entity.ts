@@ -1,5 +1,13 @@
 import { LaboratoriesExams } from 'src/exams/entities/laboratories_exams.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum LaboratoryStatus {
   Active = 'active',
@@ -25,4 +33,13 @@ export class Laboratory {
     (laboratoriesExams) => laboratoriesExams.laboratory,
   )
   exams: LaboratoriesExams[];
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz' })
+  deletedAt?: Date;
 }

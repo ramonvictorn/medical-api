@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ExamsService } from './exams.service';
 import { CreateExamDto } from './dto/create-exam.dto';
@@ -34,13 +35,25 @@ export class ExamsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExamDto: UpdateExamDto) {
-    return this.examsService.update(+id, updateExamDto);
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() updateExamDto: UpdateExamDto,
+  ) {
+    return this.examsService.update(id, updateExamDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.examsService.remove(id);
+  }
+
+  @Patch(':id/toggle-lab/:laboratoryId')
+  toggleExamOnLaboratory(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Param('laboratoryId', new ParseUUIDPipe({ version: '4' }))
+    laboratoryId: string,
+  ) {
+    return this.examsService.toggleExamOnLaboratory(id, laboratoryId);
   }
 }

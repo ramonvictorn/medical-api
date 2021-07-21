@@ -1,11 +1,10 @@
-import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateLaboratoryDto } from './dto/create-laboratory.dto';
 import { SearchLaboratoryDto } from './dto/search-laboratory.dto';
 import { UpdateLaboratoryDto } from './dto/update-laboratory.dto';
 import { Laboratory } from './entities/laboratory.entity';
-import { validate as uuidValidate } from 'uuid'
 
 @Injectable()
 export class LaboratoriesService {
@@ -38,7 +37,7 @@ export class LaboratoriesService {
 
   async update(id: string, updateLaboratoryDto: UpdateLaboratoryDto) {
     // to do valid uuid
-    if (+(Object.keys(updateLaboratoryDto)) === 0) {
+    if (+Object.keys(updateLaboratoryDto) === 0) {
       throw new HttpException(
         {
           statusCode: HttpStatus.BAD_GATEWAY,
@@ -58,7 +57,7 @@ export class LaboratoriesService {
   }
 
   async remove(id: string) {
-    const deleteResult = await this.laboratoryRepository.delete(id);
+    const deleteResult = await this.laboratoryRepository.softDelete(id);
     if (!deleteResult.affected) {
       throw new EntityNotFoundError(Laboratory, id);
     }
