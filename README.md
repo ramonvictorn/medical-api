@@ -74,7 +74,3 @@ $ npm run test:cov
 ## Basic Architecture concepts
 ### Request flow:
 <img src="https://github.com/ramonvictorn/medical-api/blob/main/arch.svg" alt="Request Flow" />
-
-## License
-
-Nest is [MIT licensed](LICENSE).
