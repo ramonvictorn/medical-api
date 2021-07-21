@@ -6,6 +6,7 @@ import {
 } from 'src/laboratories/entities/laboratory.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
+import { RemoveMultiplesExamsDto } from './dto/delete-multples-exams.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
 import { UpdateExamDto, UpdateMultipleExamsDto } from './dto/update-exam.dto';
 import { Exam, ExamStatus } from './entities/exam.entity';
@@ -131,6 +132,20 @@ export class ExamsService {
     if (!deleteResult.affected) {
       throw new EntityNotFoundError(Exam, id);
     }
+  }
+
+  async removeMultiples(removeMultiplesExamsDto: RemoveMultiplesExamsDto) {
+    return Promise.all(
+      removeMultiplesExamsDto.exams.map((examInfo) => {
+        try {
+          this.remove(examInfo.id);
+          return;
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+      }),
+    );
   }
 
   async toggleExamOnLaboratory(examId: string, laboratoryId: string) {

@@ -14,6 +14,7 @@ import { ExamsService } from './exams.service';
 import { CreateExamDto, CreateMultipleExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto, UpdateMultipleExamsDto } from './dto/update-exam.dto';
 import { SearchExamDto } from './dto/search-exam.dto';
+import { RemoveMultiplesExamsDto } from './dto/delete-multples-exams.dto';
 
 @Controller('exams')
 export class ExamsController {
@@ -50,6 +51,12 @@ export class ExamsController {
     @Body() updateExamDto: UpdateExamDto,
   ) {
     return this.examsService.update(id, updateExamDto);
+  }
+
+  @Delete('/multiples')
+  @HttpCode(204)
+  removeMultiples(@Body() removeMultiplesExamsDto: RemoveMultiplesExamsDto) {
+    return this.examsService.removeMultiples(removeMultiplesExamsDto);
   }
 
   @Delete(':id')
