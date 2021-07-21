@@ -57,7 +57,7 @@ export class ExamsService {
           await this.addExamToLaboratory(labId, exam.id);
         } else {
           message.push(
-            `Laboratory ${labId} cannot be used, check the laboratory status`,
+            `Laboratory ${labId} cannot be used, check the laboratory status or id`,
           );
         }
       });

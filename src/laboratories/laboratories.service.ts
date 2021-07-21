@@ -36,7 +36,6 @@ export class LaboratoriesService {
   }
 
   async update(id: string, updateLaboratoryDto: UpdateLaboratoryDto) {
-    // to do valid uuid
     if (+Object.keys(updateLaboratoryDto) === 0) {
       throw new HttpException(
         {
